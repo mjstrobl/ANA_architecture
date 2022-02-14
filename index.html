@@ -12,18 +12,17 @@
             font-family: -apple-system,
             BlinkMacSystemFont, "Segoe UI",
             Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
         }
 
         #form {
             background: rgba(0, 0, 0, 0.15);
-            padding: 0.25rem; position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            padding: 0.25rem;
             display: flex;
-            height: 3rem;
             box-sizing: border-box;
             backdrop-filter: blur(10px);
+            height: 3rem;
+            width: 100%;
         }
 
         #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
@@ -48,28 +47,32 @@
 
         #chat {
             width: 30%;
-            height: 100%;
             float:left;
             margin: 5px;
-            background-color: aqua;
-            overflow-y: scroll;
+            background-color: white;
+            border-style: solid;
+            border-radius: 25px;
+            border-color: darkgray;
+            overflow-y: hidden;
         }
 
-        #graph {
-            margin: 5px;
-            height: 68%;
-            width: 98%;
-            float: top;
-            background-color: white;
+        #tabs {
+            width: 70%;
+            padding: 5px;
+            float: right;
         }
 
-        #graph_str {
-            margin: 5px;
-            height: 28%;
-            width: 98%;
-            float: bottom;
-            background-color: white;
-            overflow: scroll;
+        #topdiv {
+            float:top;
+            display: flex;
+            height: 100%;
+        }
+
+        #bottomdiv {
+            float:bottom;
+            width: 30%;
+            display: block;
+            margin-left: 5px;
         }
 
         /* Style the tab */
@@ -107,32 +110,37 @@
             border: 1px solid #ccc;
             border-top: none;
             background-color: dimgrey;
-            height: 90%;
+            top: 0;
+            bottom: 0;
+            margin-bottom: 500px;
+            height: 99%;
+        }
+
+        #kgp {
+            display: block;
+
         }
 
         #graph {
-            margin: 5px;
-            height: 68%;
-            width: 98%;
+            padding: 5px;
+            margin-bottom: 5px;
+            height: 70%;
             float: top;
             background-color: white;
         }
 
         #graph_str {
-            margin: 5px;
-            height: 28%;
-            width: 98%;
+            padding: 5px;
+            top: 0;
+            bottom: 0;
+            display: flex;
             float: bottom;
             background-color: white;
             overflow: scroll;
+            height: 27%;
         }
 
-        #tabs {
-            padding: 5px;
-            float: right;
-            width: 68%;
-            height: 100%;
-        }
+
 
         .userText {
             color: white;
@@ -140,6 +148,7 @@
             font-size: 17px;
             text-align: right;
             line-height: 30px;
+            margin-right: 10px;
         }
 
         .userText span {
@@ -165,17 +174,16 @@
     </style>
 </head>
     <body>
+    <div id="topdiv">
         <div id="chat">
             <ul id="messages"></ul>
-            <form id="form" action="">
-                <input id="input" autocomplete="off" /><button>Send</button>
-            </form>
+
         </div>
         <div id="tabs">
 
             <!-- Tab links -->
             <div class="tab">
-                <button class="tablinks" onclick="openService(event, 'kgp')">KGP</button>
+                <button class="tablinks active" onclick="openService(event, 'kgp')">KGP</button>
                 <button class="tablinks" onclick="openService(event, 'Paris')">Paris</button>
                 <button class="tablinks" onclick="openService(event, 'Tokyo')">Tokyo</button>
             </div>
@@ -194,6 +202,12 @@
 
             <div id="Tokyo" class="tabcontent"></div>
         </div>
+    </div>
+    <div id="bottomdiv">
+            <form id="form" action="">
+                <input id="input" autocomplete="off" /><button>Send</button>
+            </form>
+    </div>
         <script src="/socket.io/socket.io.js"></script>
         <script type='text/javascript' src="/kgp.js"></script>
 
@@ -227,8 +241,8 @@
                 // got a server response and we need to display it to the tab belonging to the service in the message.
                 var service = msg.service
 
-                if ('message' in msg) {
-
+                if (msg.message && msg.message.length > 0) {
+                    add_message(msg.message, "botText")
                 }
 
                 console.log("got server response")
