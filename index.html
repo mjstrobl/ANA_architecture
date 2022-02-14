@@ -53,8 +53,21 @@
             border-style: solid;
             border-radius: 25px;
             border-color: darkgray;
-            overflow-y: hidden;
+            overflow-y: scroll;
+            overflow-x: hidden;
         }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        #chat::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        #chat {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
 
         #tabs {
             width: 70%;
@@ -136,7 +149,7 @@
             display: flex;
             float: bottom;
             background-color: white;
-            overflow: scroll;
+            overflow-y: scroll;
             height: 27%;
         }
 
@@ -149,12 +162,17 @@
             text-align: right;
             line-height: 30px;
             margin-right: 10px;
+            margin-left: 30px;
+            padding: 5px;
+            background-color: #009688;
+            border-radius: 5px;
         }
 
         .userText span {
-            background-color: #009688;
             padding: 10px;
             border-radius: 2px;
+            width:30%;
+            word-wrap:break-word;
         }
 
         .botText {
@@ -164,12 +182,17 @@
             text-align: left;
             margin-left: 10px;
             line-height: 30px;
+            margin-right: 30px;
+            background-color: #EF5350;
+            padding: 5px;
+            border-radius: 5px;
         }
 
         .botText span {
-            background-color: #EF5350;
             padding: 10px;
             border-radius: 2px;
+            width:30%;
+            word-wrap:break-word;
         }
     </style>
 </head>
