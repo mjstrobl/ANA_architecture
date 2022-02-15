@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Socket.IO chat</title>
+    <title>Automated Nursing Agent</title>
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <style>
@@ -164,15 +164,16 @@
             margin-right: 10px;
             margin-left: 30px;
             padding: 5px;
-            background-color: #009688;
-            border-radius: 5px;
+
         }
 
         .userText span {
             padding: 10px;
             border-radius: 2px;
             width:30%;
+            background-color: #009688;
             word-wrap:break-word;
+            border-radius: 5px;
         }
 
         .botText {
@@ -183,16 +184,17 @@
             margin-left: 10px;
             line-height: 30px;
             margin-right: 30px;
-            background-color: #EF5350;
             padding: 5px;
-            border-radius: 5px;
+
         }
 
         .botText span {
             padding: 10px;
             border-radius: 2px;
             width:30%;
+            background-color: #EF5350;
             word-wrap:break-word;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -221,7 +223,10 @@
                 </div>
             </div>
 
-            <div id="Paris" class="tabcontent"></div>
+            <div id="Paris" class="tabcontent">
+
+
+            </div>
 
             <div id="Tokyo" class="tabcontent"></div>
         </div>
@@ -275,6 +280,8 @@
                     if (msg.service === 'kgp') {
                         console.log("draw network")
                         draw_network(msg);
+                    } else if (msg.service === "topic modelling") {
+
                     }
                 }
 
@@ -312,7 +319,7 @@
                 innerItem.innerHTML = message;
                 outerItem.appendChild(innerItem);
                 messages.appendChild(outerItem);
-                document.getElementById("chat").scrollTo(0, document.body.scrollHeight);
+                document.getElementById("chat").scrollTo(0, document.getElementById("chat").scrollHeight);
             }
 
         </script>
