@@ -1,0 +1,18 @@
+#graph {
+    padding: 5px;
+    margin-bottom: 5px;
+    height: 70%;
+    float: top;
+    background-color: white;
+}
+
+#graph_str {
+    padding: 5px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    float: bottom;
+    background-color: white;
+    overflow-y: scroll;
+    height: 27%;
+}

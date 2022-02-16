@@ -24,9 +24,6 @@ function draw_network(obj) {
     var w = parseFloat(d3.select("body").select("#graph").style('width'))
     var h = parseFloat(d3.select("body").select("#graph").style('height'))
 
-    console.log(w)
-    console.log(h)
-
     var linkDistance=200;
 
     var colors = d3.scale.category10();

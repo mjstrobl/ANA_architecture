@@ -4,199 +4,8 @@
     <title>Automated Nursing Agent</title>
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <style>
-        body {
-            height:95vh;
-            margin: 0;
-            padding-bottom: 3rem;
-            font-family: -apple-system,
-            BlinkMacSystemFont, "Segoe UI",
-            Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden;
-        }
-
-        #form {
-            background: rgba(0, 0, 0, 0.15);
-            padding: 0.25rem;
-            display: flex;
-            box-sizing: border-box;
-            backdrop-filter: blur(10px);
-            height: 3rem;
-            width: 100%;
-        }
-
-        #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-        #input:focus { outline: none; }
-        #form > button {
-            background: #333;
-            border: none;
-            padding: 0 1rem;
-            margin: 0.25rem;
-            border-radius: 3px;
-            outline: none;
-            color: #fff;
-        }
-
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-        #messages > li { padding: 0.5rem 1rem; }
-        #messages > li:nth-child(odd) { background: #efefef; }
-
-        #chat {
-            width: 30%;
-            float:left;
-            margin: 5px;
-            background-color: white;
-            border-style: solid;
-            border-radius: 25px;
-            border-color: darkgray;
-            overflow-y: scroll;
-            overflow-x: hidden;
-        }
-
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        #chat::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Hide scrollbar for IE, Edge and Firefox */
-        #chat {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-
-
-        #tabs {
-            width: 70%;
-            padding: 5px;
-            float: right;
-        }
-
-        #topdiv {
-            float:top;
-            display: flex;
-            height: 100%;
-        }
-
-        #bottomdiv {
-            float:bottom;
-            width: 30%;
-            display: block;
-            margin-left: 5px;
-        }
-
-        /* Style the tab */
-        .tab {
-            overflow: hidden;
-            border: 1px solid #ccc;
-            background-color: #f1f1f1;
-        }
-
-        /* Style the buttons that are used to open the tab content */
-        .tab button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            transition: 0.3s;
-        }
-
-        /* Change background color of buttons on hover */
-        .tab button:hover {
-            background-color: #ddd;
-        }
-
-        /* Create an active/current tablink class */
-        .tab button.active {
-            background-color: #ccc;
-        }
-
-        /* Style the tab content */
-        .tabcontent {
-            display: none;
-            padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-top: none;
-            background-color: dimgrey;
-            top: 0;
-            bottom: 0;
-            margin-bottom: 500px;
-            height: 99%;
-        }
-
-        #kgp {
-            display: block;
-
-        }
-
-        #graph {
-            padding: 5px;
-            margin-bottom: 5px;
-            height: 70%;
-            float: top;
-            background-color: white;
-        }
-
-        #graph_str {
-            padding: 5px;
-            top: 0;
-            bottom: 0;
-            display: flex;
-            float: bottom;
-            background-color: white;
-            overflow-y: scroll;
-            height: 27%;
-        }
-
-
-
-        .userText {
-            color: white;
-            font-family: monospace;
-            font-size: 17px;
-            text-align: right;
-            line-height: 30px;
-            margin-right: 10px;
-            margin-left: 30px;
-            padding: 5px;
-
-        }
-
-        .userText span {
-            padding: 10px;
-            border-radius: 2px;
-            width:30%;
-            background-color: #009688;
-            word-wrap:break-word;
-            border-radius: 5px;
-        }
-
-        .botText {
-            color: white;
-            font-family: monospace;
-            font-size: 17px;
-            text-align: left;
-            margin-left: 10px;
-            line-height: 30px;
-            margin-right: 30px;
-            padding: 5px;
-
-        }
-
-        .botText span {
-            padding: 10px;
-            border-radius: 2px;
-            width:30%;
-            background-color: #EF5350;
-            word-wrap:break-word;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/kgp.css">
 </head>
     <body>
     <div id="topdiv">
@@ -208,13 +17,13 @@
 
             <!-- Tab links -->
             <div class="tab">
-                <button class="tablinks active" onclick="openService(event, 'kgp')">KGP</button>
-                <button class="tablinks" onclick="openService(event, 'Paris')">Paris</button>
-                <button class="tablinks" onclick="openService(event, 'Tokyo')">Tokyo</button>
+                <button class="tablinks active" onclick="openService(event, 'KGP')">KGP</button>
+                <button class="tablinks" onclick="openService(event, 'Emotions')">Emotions</button>
+                <button class="tablinks" onclick="openService(event, 'RG')">RG</button>
             </div>
 
             <!-- Tab content -->
-            <div id="kgp" class="tabcontent">
+            <div id="KGP" class="tabcontent">
                 <div id="graph">
 
                 </div>
@@ -223,12 +32,18 @@
                 </div>
             </div>
 
-            <div id="Paris" class="tabcontent">
+            <div id="Emotions" class="tabcontent">
+                <div id="emotions_div">
 
+                </div>
 
             </div>
 
-            <div id="Tokyo" class="tabcontent"></div>
+            <div id="RG" class="tabcontent">
+                <div id="rg_div">
+
+                </div>
+            </div>
         </div>
     </div>
     <div id="bottomdiv">
@@ -251,44 +66,38 @@
                 if (input.value) {
                     // emit message to server as well as this client (just for displaying).
                     socket.emit('message', input.value);
+                    add_message(input.value, "userText", "#009688")
                     input.value = '';
                 }
             });
 
-            socket.on('message', function(msg) {
-                // got message from this client.
-                console.log("got message from this client.")
-                //var item = document.createElement('li');
-                //item.textContent = msg.msg;
-                //messages.appendChild(item);
-                //window.scrollTo(0, document.body.scrollHeight);
-                add_message(msg.msg, "userText")
-            });
-
-            socket.on('server_response', function(msg) {
-                // got a server response and we need to display it to the tab belonging to the service in the message.
-                var service = msg.service
-
-                if (msg.message && msg.message.length > 0) {
-                    add_message(msg.message, "botText")
-                }
+            socket.on('ana_server_response', function(msg) {
 
                 console.log("got server response")
                 console.log(msg)
 
-                if ('service' in msg) {
+                if (msg.service) {
+                    color = "#EF5350"
                     if (msg.service === 'kgp') {
                         console.log("draw network")
                         draw_network(msg);
-                    } else if (msg.service === "topic modelling") {
+                        color = "#EF5350"
+                    } else if (msg.service === "emotions") {
+                        console.log("display emotions")
+                        color = "#1f1a15"
 
+                        document.getElementById("emotions_div").textContent = msg.emotions
+                    } else if (msg.service === "rg") {
+                        console.log("got a response: " + msg.message)
+                        color = "#90ef50"
+                        document.getElementById("rg_div").textContent = "Got a response: " + msg.message
+                    }
+
+                    if (msg.message && msg.message.length > 0) {
+                        add_message(msg.message, "botText", color)
                     }
                 }
 
-
-
-                //var item = document.getElementById(service)
-                //item.textContent = msg.message
             });
 
             function openService(evt, serviceName) {
@@ -312,10 +121,11 @@
                 evt.currentTarget.className += " active";
             }
 
-            function add_message(message, className) {
+            function add_message(message, className, color) {
                 var outerItem = document.createElement('p');
                 outerItem.className = className;
                 var innerItem = document.createElement('span');
+                innerItem.style.backgroundColor = color
                 innerItem.innerHTML = message;
                 outerItem.appendChild(innerItem);
                 messages.appendChild(outerItem);
