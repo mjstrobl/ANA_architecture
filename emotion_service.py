@@ -51,7 +51,7 @@ model.load_state_dict(torch.load(
 model.eval()
 
 
-SERVICE_PREFIX = "basic_service"
+SERVICE_PREFIX = "emotions"
 
 sio = socketio.Client()
 sio.connect('http://localhost:3000')
@@ -66,14 +66,16 @@ def on_message(msg):
     text = msg['msg']
 
     y_pred = inference(text, word2id, model)
+
+    emo_info = dict(zip(label_cols, y_pred))
     # Choose a unique name for your service. We are using the prefix here.
     msg['service'] = SERVICE_PREFIX
 
     # Add a message that can be displayed in the chatbox (optional)
-    msg['message'] = str(y_pred)
+    # msg['message'] = str(emo_info)
 
     # Basic things to add for your service, make sure the keys are unique, therefore it makes sense to add the service name, which is unique, as prefix.
-    msg[SERVICE_PREFIX + '_stuff'] = {"a":1, "b":2}
+    msg['emotions'] = str(emo_info)
 
     # back to the server.
     sio.emit('server_response', msg)
