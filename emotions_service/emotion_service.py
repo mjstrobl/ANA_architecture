@@ -3,7 +3,7 @@ import socketio
 
 import torch
 from torch.autograd import Variable
-from model_cpu import AttentionLSTMClassifier
+from emotions_service.model_cpu import AttentionLSTMClassifier
 import pickle
 
 from nltk.corpus import stopwords
