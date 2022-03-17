@@ -53,6 +53,7 @@
     </div>
         <script src="/socket.io/socket.io.js"></script>
         <script type='text/javascript' src="/kgp.js"></script>
+        <script type="text/javascript" src="config.json"></script>
 
         <script>
             var socket = io();
@@ -61,11 +62,23 @@
             var form = document.getElementById('form');
             var input = document.getElementById('input');
 
+            var config = JSON.parse(config);
+            console.log(config)
+
+            // we send a message to the server to let it know about a new user
+            socket.emit('message', {"username": config.username});
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 if (input.value) {
                     // emit message to server as well as this client (just for displaying).
-                    socket.emit('message', input.value);
+                    if (!config.username) {
+                        config.username = input.value
+                        socket.emit('message', {"username": input.value})
+                    } else {
+                        socket.emit('message', {"username": config.username, "message": input.value})
+                    }
+
                     add_message(input.value, "userText", "#009688")
                     input.value = '';
                 }
@@ -85,7 +98,6 @@
                     } else if (msg.service === "emotions") {
                         console.log("display emotions")
                         color = "#1f1a15"
-
                         document.getElementById("emotions_div").textContent = msg.emotions
                     } else if (msg.service === "rg") {
                         console.log("got a response: " + msg.message)
@@ -96,6 +108,8 @@
                     if (msg.message && msg.message.length > 0) {
                         add_message(msg.message, "botText", color)
                     }
+                } else {
+                    console.error("Message does not contain service!")
                 }
 
             });
