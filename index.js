@@ -34,6 +34,7 @@ client.connect(function(err, mongoclient) {
             // we got a message from a client and we distribute it to all services listening to the channel "client_message".
             const socketId = socket.id
 
+            console.log("message socket")
             console.log(socketIdToUsername)
             console.log(socketId)
             console.log(msg)
@@ -41,7 +42,7 @@ client.connect(function(err, mongoclient) {
             if (!msg.username) {
                 io.to(socketId).emit("ana_server_response", {"service": "setup_username","message":"Hi, I'm Ana. What's your name?"})
             } else {
-                if (!socketIdToUsername.socketId) {
+                if (!socketIdToUsername.socketId || (msg.username && !msg.message)) {
                     if (msg.username) {
                         socketIdToUsername.socketId = msg
                         io.to(socketId).emit("ana_server_response", {"service": "setup_username","message":"Hi " + msg.username + "!"})
@@ -52,7 +53,7 @@ client.connect(function(err, mongoclient) {
                     const messageId = (await db.collection('messages').countDocuments()) + 1
                     const message = msg
                     message.id = messageId
-                    console.log("message socket")
+
                     io.emit('client_message', message)
 
                     console.log('socket.id: ' + socket.id)
