@@ -30,6 +30,23 @@ client.connect(function(err, mongoclient) {
     console.log('MongoDB connected...')
 
     io.on('connection', (socket) => {
+
+        io.emit('service_setup')
+
+        socket.on('username', async msg => {
+            const socketId = socket.id
+            if (!msg.username) {
+                io.to(socketId).emit("ana_server_response", {"service": "setup_username","message":"Hi, I'm Ana. What's your name?"})
+            } else {
+                socketIdToUsername.socketId = msg
+                io.to(socketId).emit("ana_server_response", {
+                    "service": "setup_username",
+                    "message": "Hi " + msg.username + "!"
+                })
+            }
+        });
+
+
         socket.on('message', async msg => {
             // we got a message from a client and we distribute it to all services listening to the channel "client_message".
             const socketId = socket.id
@@ -80,6 +97,15 @@ client.connect(function(err, mongoclient) {
             // emit this message back to the client where the original message came from.
             if (res.socketId) {
                 io.to(res.socketId).emit("ana_server_response", res)
+            }
+        });
+
+        socket.on('service_setup_response_server', res => {
+            console.log("Got setup message")
+            console.log(res)
+            // see which service responds and set checkbox
+            if (res.service) {
+                io.emit('service_setup_response_client',res)
             }
         });
 

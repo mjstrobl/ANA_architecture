@@ -18,13 +18,23 @@ def on_message(msg):
     msg['service'] = SERVICE_PREFIX
 
     # Add a message that can be displayed in the chatbox (optional)
-    msg['message'] = "found emotions"
+    msg['message'] = "found something"
 
     # Basic things to add for your service, make sure the keys are unique, therefore it makes sense to add the service name, which is unique, as prefix.
     msg[SERVICE_PREFIX + '_stuff'] = {"a":1, "b":2}
 
     # back to the server.
     sio.emit('server_response', msg)
+
+@sio.on('service_setup')
+def on_message():
+    print('I received a setup message!')
+    #I'm working, therefore we can reply here.
+
+    #This is a message back to the server letting it know that this service is working.
+    #You have to make sure that there is a tab button with id=SERVICE_PREFIX_button, e.g. kgp_button for Michael's KGP service.
+
+    sio.emit('service_setup_response_server', {"service":SERVICE_PREFIX})
 
 
 

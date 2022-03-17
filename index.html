@@ -17,13 +17,13 @@
 
             <!-- Tab links -->
             <div class="tab">
-                <button class="tablinks active" onclick="openService(event, 'KGP')">KGP</button>
-                <button class="tablinks" onclick="openService(event, 'Emotions')">Emotions</button>
-                <button class="tablinks" onclick="openService(event, 'RG')">RG</button>
+                <button id="kgp_button" class="tablinks" onclick="openService(event,'kgp_tab_content')">KGP</button>
+                <button id="emotions_button" class="tablinks" onclick="openService(event,'emotions_tab_content')">Emotions</button>
+                <button id="rg_button" class="tablinks" onclick="openService(event,'rg_tab_content')">RG</button>
             </div>
 
             <!-- Tab content -->
-            <div id="KGP" class="tabcontent">
+            <div id="kgp_tab_content" class="tabcontent">
                 <div id="graph">
 
                 </div>
@@ -32,14 +32,14 @@
                 </div>
             </div>
 
-            <div id="Emotions" class="tabcontent">
+            <div id="emotions_tab_content" class="tabcontent">
                 <div id="emotions_div">
 
                 </div>
 
             </div>
 
-            <div id="RG" class="tabcontent">
+            <div id="rg_tab_content" class="tabcontent">
                 <div id="rg_div">
 
                 </div>
@@ -66,7 +66,7 @@
             console.log(config)
 
             // we send a message to the server to let it know about a new user
-            socket.emit('message', {"username": config.username});
+            socket.emit('username', {"username": config.username});
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -114,7 +114,24 @@
 
             });
 
+            socket.on('service_setup_response_client', function(msg) {
+
+                console.log("got a service response")
+                console.log(msg)
+
+                if (msg.service) {
+                    document.getElementById(msg.service + "_button").style.display = "block";
+                    add_message("Service active: " + msg.service, "botText", color)
+                } else {
+                    console.error("Setup message does not contain service!")
+                }
+
+            });
+
             function openService(evt, serviceName) {
+
+                console.log(serviceName)
+
                 // Declare all variables
                 var i, tabcontent, tablinks;
 

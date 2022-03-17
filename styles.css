@@ -122,6 +122,10 @@ body {
     height: 99%;
 }
 
+.tablinks {
+    display: none;
+}
+
 #KGP {
     display: block;
 }
