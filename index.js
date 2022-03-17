@@ -46,7 +46,7 @@ client.connect(function(err, mongoclient) {
                     "message": "Hi " + msg.username + "!"
                 })
                 msg.socketId = socketId
-                io.emit('service_setup')
+                io.emit('service_setup',msg)
             }
         });
 
@@ -99,7 +99,13 @@ client.connect(function(err, mongoclient) {
             console.log(res)
             // see which service responds and set checkbox
             if (res.service) {
-                io.emit('service_setup_response_client',res)
+                if (res.socketId) {
+                    // only let the client that asked know about this service
+                    io.to(res.socketId).emit("service_setup_response_client", res)
+                } else {
+                    // let everybody know about this service
+                    io.emit('service_setup_response_client', res)
+                }
             }
         });
 
