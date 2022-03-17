@@ -31,9 +31,11 @@ client.connect(function(err, mongoclient) {
 
     io.on('connection', (socket) => {
 
-        io.emit('service_setup')
-
         socket.on('username', async msg => {
+
+            console.log("got username message")
+            console.log(msg)
+
             const socketId = socket.id
             if (!msg.username) {
                 io.to(socketId).emit("ana_server_response", {"service": "setup_username","message":"Hi, I'm Ana. What's your name?"})
@@ -43,6 +45,8 @@ client.connect(function(err, mongoclient) {
                     "service": "setup_username",
                     "message": "Hi " + msg.username + "!"
                 })
+                msg.socketId = socketId
+                io.emit('service_setup')
             }
         });
 
@@ -56,29 +60,18 @@ client.connect(function(err, mongoclient) {
             console.log(socketId)
             console.log(msg)
 
-            if (!msg.username) {
-                io.to(socketId).emit("ana_server_response", {"service": "setup_username","message":"Hi, I'm Ana. What's your name?"})
-            } else {
-                if (!socketIdToUsername.socketId || (msg.username && !msg.message)) {
-                    if (msg.username) {
-                        socketIdToUsername.socketId = msg
-                        io.to(socketId).emit("ana_server_response", {"service": "setup_username","message":"Hi " + msg.username + "!"})
-                    } else {
-                        console.error("Username missing!")
-                    }
-                } else {
-                    const messageId = (await db.collection('messages').countDocuments()) + 1
-                    const message = msg
-                    message.id = messageId
+            const messageId = (await db.collection('messages').countDocuments()) + 1
+            const message = msg
+            message.messageId = messageId
+            message.socketId = socketId
 
-                    io.emit('client_message', message)
+            io.emit('client_message', message)
 
-                    console.log('socket.id: ' + socket.id)
-                    console.log('message: ' + JSON.stringify(message))
+            console.log('socket.id: ' + socket.id)
+            console.log('message: ' + JSON.stringify(message))
 
-                    db.collection('messages').insertOne(message)
-                }
-            }
+            console.log("write message to database")
+            db.collection('messages').insertOne(message)
         });
 
         socket.on('server_response', async res => {
@@ -88,8 +81,9 @@ client.connect(function(err, mongoclient) {
             console.log('response: ' + JSON.stringify(res))
 
             if (res.messageId && res.service) {
+                console.log("write response to database")
                 const responseId = (await db.collection('responses').countDocuments()) + 1
-                db.collection('responses').insertOne({"id": responseId, "messageId": res.messageId, "service": res.service, "response": JSON.stringify(message)})
+                db.collection('responses').insertOne({"id": responseId, "messageId": res.messageId, "service": res.service, "response": JSON.stringify(res.message)})
             } else {
                 console.error("MessageId and/or service are missing in response!")
             }

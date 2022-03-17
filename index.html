@@ -66,6 +66,7 @@
             console.log(config)
 
             // we send a message to the server to let it know about a new user
+            console.log("emit username message")
             socket.emit('username', {"username": config.username});
 
             form.addEventListener('submit', function(e) {
@@ -74,7 +75,7 @@
                     // emit message to server as well as this client (just for displaying).
                     if (!config.username) {
                         config.username = input.value
-                        socket.emit('message', {"username": input.value})
+                        socket.emit('username', {"username": input.value})
                     } else {
                         socket.emit('message', {"username": config.username, "message": input.value})
                     }
@@ -106,7 +107,7 @@
                     }
 
                     if (msg.message && msg.message.length > 0) {
-                        add_message(msg.message, "botText", color)
+                        add_message(msg.message, "botText", "#EF5350")
                     }
                 } else {
                     console.error("Message does not contain service!")
@@ -121,7 +122,7 @@
 
                 if (msg.service) {
                     document.getElementById(msg.service + "_button").style.display = "block";
-                    add_message("Service active: " + msg.service, "botText", color)
+                    add_message("Service active: " + msg.service, "botText", "#EF5350")
                 } else {
                     console.error("Setup message does not contain service!")
                 }
