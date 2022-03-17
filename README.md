@@ -42,6 +42,17 @@ The main thing here is to make things work somehow, even though it may not be pr
 
 Run the server with "npm run start" (this may have to be installed, e.g. see this: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-20-04/) and open the website (http://localhost:3000). Your service should be running too. Send a message to see if it works.
 
+## MongoDB database
+
+Install on Ubuntu:
+
+```console
+sudo apt install mongodb
+```
+
+
+
+
 ## Requirements
 
 This list may not be exhaustive, but it should be straighforward to fix any issues.
@@ -49,6 +60,7 @@ This list may not be exhaustive, but it should be straighforward to fix any issu
 1. pip install python-socketio[client]
 2. sudo apt install npm
 3. npm install express
+4. npm install mongodb
 
 ## Features missing / things to fix
 
