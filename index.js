@@ -54,18 +54,17 @@ client.connect(function(err, mongoclient) {
         socket.on('message', async msg => {
             // we got a message from a client and we distribute it to all services listening to the channel "client_message".
             const socketId = socket.id
+            const username = msg.username
+            const message = msg.message
+            const messageId = (await db.collection('messages').countDocuments()) + 1
+            const message_forwarded = {username, socketId, "messages": [{message, messageId}]}
 
             console.log("message socket")
             console.log(socketIdToUsername)
             console.log(socketId)
             console.log(msg)
 
-            const messageId = (await db.collection('messages').countDocuments()) + 1
-            const message = msg
-            message.messageId = messageId
-            message.socketId = socketId
-
-            io.emit('client_message', message)
+            io.emit('client_message', message_forwarded)
 
             console.log('socket.id: ' + socket.id)
             console.log('message: ' + JSON.stringify(message))
@@ -80,17 +79,21 @@ client.connect(function(err, mongoclient) {
             console.log('socket.id: ' + socket.id)
             console.log('response: ' + JSON.stringify(res))
 
-            if (res.messageId && res.service) {
+            const service = res.service
+            const responses = res.responses
+            const username = res.username
+            const socketId = res.socketId
+            const messages = res.messages
+
+            for (response in responses) {
                 console.log("write response to database")
                 const responseId = (await db.collection('responses').countDocuments()) + 1
-                db.collection('responses').insertOne({"id": responseId, "messageId": res.messageId, "service": res.service, "response": JSON.stringify(res.message)})
-            } else {
-                console.error("MessageId and/or service are missing in response!")
+                db.collection('responses').insertOne({"id": responseId, "username": username, "service": service, "response": JSON.stringify(res.response)})
             }
 
             // emit this message back to the client where the original message came from.
-            if (res.socketId) {
-                io.to(res.socketId).emit("ana_server_response", res)
+            if (socketId) {
+                io.to(socketId).emit("ana_server_response", res)
             }
         });
 

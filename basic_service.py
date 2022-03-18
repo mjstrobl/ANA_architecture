@@ -21,18 +21,21 @@ def on_message(msg):
     print('I received a message!')
     print(msg)
 
-    # message from the client, use text to process.
-    text = msg['msg']
+    # messages from the client, use text to process. Of type list, typically one item, but could be more.
+    messages_from_client_list = msg['messages']
 
     # Choose a unique name for your service. We are using the prefix here.
     msg['service'] = SERVICE_PREFIX
 
-    # Add a message that can be displayed in the chatbox (optional)
-    msg['message'] = "found something"
+    responses = []
 
-    # Basic things to add for your service, make sure the keys are unique, therefore it makes sense to add the service name, which is unique, as prefix.
-    msg[SERVICE_PREFIX + '_stuff'] = {"a":1, "b":2}
+    for message_dict in messages_from_client_list:
+        message = message_dict['message']
+        messageId = message_dict['messageId']
+        responses.append({"message": "response for this message", "messageId": messageId,
+                          SERVICE_PREFIX + "_stuff": "a string or a dictionary of something else you need to attach. Make sure it starts with your prefix, otherwise you can use whatever key you'd like."})
 
+    msg['responses'] = responses
     # back to the server.
     sio.emit('server_response', msg)
 
