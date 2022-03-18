@@ -2,8 +2,12 @@ import socketio
 
 SERVICE_PREFIX = "basic_service"
 
-def emit_setup_message(sio):
-    sio.emit('service_setup_response_server', {"service": SERVICE_PREFIX})
+def emit_setup_message(sio, msg=None):
+    if msg:
+        msg['service'] = SERVICE_PREFIX
+        sio.emit('service_setup_response_server', msg)
+    else:
+        sio.emit('service_setup_response_server', {"service": SERVICE_PREFIX})
 
 sio = socketio.Client()
 sio.connect('http://localhost:3000')
@@ -33,14 +37,14 @@ def on_message(msg):
     sio.emit('server_response', msg)
 
 @sio.on('service_setup')
-def on_message():
+def on_message(msg):
     print('I received a setup message!')
     #I'm working, therefore we can reply here.
 
     #This is a message back to the server letting it know that this service is working.
     #You have to make sure that there is a tab button with id=SERVICE_PREFIX_button, e.g. kgp_button for Michael's KGP service.
 
-    emit_setup_message(sio)
+    emit_setup_message(sio, msg)
 
 
 
