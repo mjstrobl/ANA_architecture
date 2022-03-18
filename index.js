@@ -70,7 +70,7 @@ client.connect(function(err, mongoclient) {
             console.log('message: ' + JSON.stringify(message))
 
             console.log("write message to database")
-            db.collection('messages').insertOne(message)
+            db.collection('messages').insertOne(msg)
         });
 
         socket.on('server_response', async res => {
@@ -85,16 +85,22 @@ client.connect(function(err, mongoclient) {
             const socketId = res.socketId
             const messages = res.messages
 
-            for (response in responses) {
+            for (response of responses) {
                 console.log("write response to database")
                 const responseId = (await db.collection('responses').countDocuments()) + 1
                 db.collection('responses').insertOne({"id": responseId, "username": username, "service": service, "response": JSON.stringify(res.response)})
+
+                // emit this message back to the client where the original message came from.
+                if (socketId) {
+                    response.username = username
+                    response.socketId = socketId
+                    response.service = service
+                    console.log(response)
+                    io.to(socketId).emit("ana_server_response", response)
+                }
             }
 
-            // emit this message back to the client where the original message came from.
-            if (socketId) {
-                io.to(socketId).emit("ana_server_response", res)
-            }
+
         });
 
         socket.on('service_setup_response_server', res => {
@@ -110,6 +116,21 @@ client.connect(function(err, mongoclient) {
                     io.emit('service_setup_response_client', res)
                 }
             }
+        });
+
+        socket.on('get_messages', res => {
+            // services can ask for messages here
+
+            console.log("get messages")
+            console.log(res)
+            const username = res.username
+            db.collection('messages').find({username}).toArray(function(err, result) {
+                if (err) throw err;
+                console.log(result)
+                console.log(socket.id)
+                io.to(socket.id).emit("return_messages",result)
+            });
+
         });
 
         socket.on('another_channel_to_do_something', res => {

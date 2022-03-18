@@ -120,9 +120,13 @@
                 console.log("got a service response")
                 console.log(msg)
 
+
+
                 if (msg.service) {
-                    document.getElementById(msg.service + "_button").style.display = "block";
                     add_message("Service active: " + msg.service, "botText", "#EF5350")
+                    if (document.getElementById(msg.service + "_button")) {
+                        document.getElementById(msg.service + "_button").style.display = "block";
+                    }
                 } else {
                     console.error("Setup message does not contain service!")
                 }

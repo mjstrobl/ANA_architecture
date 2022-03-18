@@ -9,12 +9,16 @@ def emit_setup_message(sio, msg=None):
     else:
         sio.emit('service_setup_response_server', {"service": SERVICE_PREFIX})
 
+
+
 sio = socketio.Client()
 sio.connect('http://localhost:3000')
 print('my sid is', sio.sid)
 
 # emit setup message
 emit_setup_message(sio)
+sio.emit("get_messages", {"username":"Michael"})
+
 
 @sio.on('client_message')
 def on_message(msg):
@@ -32,7 +36,7 @@ def on_message(msg):
     for message_dict in messages_from_client_list:
         message = message_dict['message']
         messageId = message_dict['messageId']
-        responses.append({"message": "response for this message", "messageId": messageId,
+        responses.append({"message": "basic response for this message", "messageId": messageId,
                           SERVICE_PREFIX + "_stuff": "a string or a dictionary of something else you need to attach. Make sure it starts with your prefix, otherwise you can use whatever key you'd like."})
 
     msg['responses'] = responses
@@ -48,6 +52,15 @@ def on_message(msg):
     #You have to make sure that there is a tab button with id=SERVICE_PREFIX_button, e.g. kgp_button for Michael's KGP service.
 
     emit_setup_message(sio, msg)
+
+@sio.on('return_messages')
+def on_message(msg):
+    # all messages for the username we asked for
+    print('return_messages')
+    print(msg)
+
+
+
 
 
 
