@@ -5,7 +5,8 @@
   "dependencies": {
     "mongodb": "^4.4.0",
     "express": "^4.17.3",
-    "socket.io": "^4.4.1"
+    "socket.io": "^4.4.1",
+    "chart.js": "^3.7.1"
   },
   "scripts": {
     "start": "node index.js"
