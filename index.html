@@ -20,6 +20,7 @@
                 <button id="kgp_button" class="tablinks" onclick="openService(event,'kgp_tab_content')">KGP</button>
                 <button id="emotions_button" class="tablinks" onclick="openService(event,'emotions_tab_content')">Emotions</button>
                 <button id="rg_button" class="tablinks" onclick="openService(event,'rg_tab_content')">RG</button>
+                <button id="tm_button" class="tablinks" onclick="openService(event, 'tm_tab_content')">Topics</button>
             </div>
 
             <!-- Tab content -->
@@ -41,6 +42,12 @@
 
             <div id="rg_tab_content" class="tabcontent">
                 <div id="rg_div">
+
+                </div>
+            </div>
+
+            <div id="tm_tab_content" class="tabcontent">
+                <div id="topic_div">
 
                 </div>
             </div>
@@ -104,6 +111,9 @@
                         console.log("got a response: " + msg.message)
                         color = "#90ef50"
                         document.getElementById("rg_div").textContent = "Got a response: " + msg.message
+                    } else if (msg.service === "topic_model") {
+                        console.log("got a response: " + msg.topic_model_message);
+                        document.getElementById("topic_div").textContent = "Topic response: " + msg.topic_model_topics
                     }
 
                     if (msg.message && msg.message.length > 0) {

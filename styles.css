@@ -146,6 +146,14 @@ body {
     background-color: white;
 }
 
+#topic_div {
+    padding: 5px;
+    margin-bottom: 5px;
+    height: 99%;
+    float: top;
+    background-color: white;
+}
+
 .userText {
     color: white;
     font-family: monospace;
