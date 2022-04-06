@@ -1,6 +1,6 @@
 function draw_network(obj) {
     console.log(obj)
-    obj = obj['graph_dictionary']
+    obj = obj['kgp_graph_dictionary']
     var obj_nodes = obj['nodes'];
     var obj_edges = obj['edges'];
     var graph_string = obj['graph']

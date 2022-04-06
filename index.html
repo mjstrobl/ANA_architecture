@@ -17,14 +17,14 @@
 
             <!-- Tab links -->
             <div class="tab">
-                <button class="tablinks active" onclick="openService(event, 'KGP')">KGP</button>
-                <button class="tablinks" onclick="openService(event, 'Emotions')">Emotions</button>
-                <button class="tablinks" onclick="openService(event, 'RG')">RG</button>
-                <button class="tablinks" onclick="openService(event, 'Topics')">Topics</button>
+                <button id="kgp_button" class="tablinks" onclick="openService(event,'kgp_tab_content')">KGP</button>
+                <button id="emotions_button" class="tablinks" onclick="openService(event,'emotions_tab_content')">Emotions</button>
+                <button id="rg_button" class="tablinks" onclick="openService(event,'rg_tab_content')">RG</button>
+                <button id="tm_button" class="tablinks" onclick="openService(event, 'tm_tab_content')">Topics</button>
             </div>
 
             <!-- Tab content -->
-            <div id="KGP" class="tabcontent">
+            <div id="kgp_tab_content" class="tabcontent">
                 <div id="graph">
 
                 </div>
@@ -33,20 +33,20 @@
                 </div>
             </div>
 
-            <div id="Emotions" class="tabcontent">
+            <div id="emotions_tab_content" class="tabcontent">
                 <div id="emotions_div">
 
                 </div>
 
             </div>
 
-            <div id="RG" class="tabcontent">
+            <div id="rg_tab_content" class="tabcontent">
                 <div id="rg_div">
 
                 </div>
             </div>
 
-            <div id="Topics" class="tabcontent">
+            <div id="tm_tab_content" class="tabcontent">
                 <div id="topic_div">
 
                 </div>
@@ -60,6 +60,7 @@
     </div>
         <script src="/socket.io/socket.io.js"></script>
         <script type='text/javascript' src="/kgp.js"></script>
+        <script type="text/javascript" src="config.json"></script>
 
         <script>
             var socket = io();
@@ -68,11 +69,24 @@
             var form = document.getElementById('form');
             var input = document.getElementById('input');
 
+            var config = JSON.parse(config);
+            console.log(config)
+
+            // we send a message to the server to let it know about a new user
+            console.log("emit username message")
+            socket.emit('username', {"username": config.username});
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 if (input.value) {
                     // emit message to server as well as this client (just for displaying).
-                    socket.emit('message', input.value);
+                    if (!config.username) {
+                        config.username = input.value
+                        socket.emit('username', {"username": input.value})
+                    } else {
+                        socket.emit('message', {"username": config.username, "message": input.value})
+                    }
+
                     add_message(input.value, "userText", "#009688")
                     input.value = '';
                 }
@@ -92,7 +106,6 @@
                     } else if (msg.service === "emotions") {
                         console.log("display emotions")
                         color = "#1f1a15"
-
                         document.getElementById("emotions_div").textContent = msg.emotions
                     } else if (msg.service === "rg") {
                         console.log("got a response: " + msg.message)
@@ -104,13 +117,36 @@
                     }
 
                     if (msg.message && msg.message.length > 0) {
-                        add_message(msg.message, "botText", color)
+                        add_message(msg.message, "botText", "#EF5350")
                     }
+                } else {
+                    console.error("Message does not contain service!")
+                }
+
+            });
+
+            socket.on('service_setup_response_client', function(msg) {
+
+                console.log("got a service response")
+                console.log(msg)
+
+
+
+                if (msg.service) {
+                    add_message("Service active: " + msg.service, "botText", "#EF5350")
+                    if (document.getElementById(msg.service + "_button")) {
+                        document.getElementById(msg.service + "_button").style.display = "block";
+                    }
+                } else {
+                    console.error("Setup message does not contain service!")
                 }
 
             });
 
             function openService(evt, serviceName) {
+
+                console.log(serviceName)
+
                 // Declare all variables
                 var i, tabcontent, tablinks;
 
