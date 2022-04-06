@@ -4,6 +4,7 @@
     <title>Automated Nursing Agent</title>
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/kgp.css">
 </head>
@@ -48,7 +49,11 @@
 
             <div id="tm_tab_content" class="tabcontent">
                 <div id="topic_div">
-
+                    <p id="tokens_paragraph"></p>
+                    <div>
+                        <canvas id="myTMChart"></canvas>
+                    </div>
+                    <p id="topic_words"></p>
                 </div>
             </div>
         </div>
@@ -61,6 +66,7 @@
         <script src="/socket.io/socket.io.js"></script>
         <script type='text/javascript' src="/kgp.js"></script>
         <script type="text/javascript" src="config.json"></script>
+        <script src="/tm.js"></script>
 
         <script>
             var socket = io();
@@ -112,8 +118,7 @@
                         color = "#90ef50"
                         document.getElementById("rg_div").textContent = "Got a response: " + msg.message
                     } else if (msg.service === "topic_model") {
-                        console.log("got a response: " + msg.topic_model_message);
-                        document.getElementById("topic_div").textContent = "Topic response: " + msg.topic_model_topics
+                        displayTopics(msg);
                     }
 
                     if (msg.message && msg.message.length > 0) {
