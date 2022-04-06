@@ -1,4 +1,4 @@
-const SERVICE_PREFIX = "topic_model";
+const SERVICE_PREFIX = "tm";
 
 function displayTopics(msg) {
   console.log(msg);
