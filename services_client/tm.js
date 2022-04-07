@@ -1,7 +1,8 @@
 const SERVICE_PREFIX = "tm";
 
 function displayTopics(msg) {
-  console.log(msg);
+  console.log("trying to display topics");
+  // console.log(msg);
   const topic_words = msg[SERVICE_PREFIX + "_topic_words"];
 
   // get topic modelling div

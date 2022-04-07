@@ -117,8 +117,9 @@
                         console.log("got a response: " + msg.message)
                         color = "#90ef50"
                         document.getElementById("rg_div").textContent = "Got a response: " + msg.message
-                    } else if (msg.service === "topic_model") {
-                        displayTopics(msg.responses[0]);
+                    } else if (msg.service === "tm") {
+                        console.log("received topic modelling response");
+                        displayTopics(msg);
                     }
 
                     if (msg.message && msg.message.length > 0) {
